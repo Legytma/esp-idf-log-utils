@@ -13,7 +13,7 @@ targets:
 # Short description for the project [Recommended]
 description: Log Utils
 # Github repo or a home  [Recommended]
-url: https://github.com/Legytma/esp-idf-log-utils
+url: https://github.com/Legytma/esp-idf-log-utils.git
 
 # List of dependencies [Optional]
 # All dependencies of the component should be published in the same registry.
