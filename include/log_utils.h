@@ -37,6 +37,7 @@
 #endif
 
 #define LOG_TAG(t) static const char* UNUSED(TAG) = t
+#define LOG_TAG_FILE() static const char* UNUSED(TAG) = __LINE__
 
 #define LOGV(...) ESP_LOGV(TAG, ##__VA_ARGS__)
 #define LOGD(...) ESP_LOGD(TAG, ##__VA_ARGS__)
@@ -51,6 +52,25 @@
 #define LOG_BUFFER_I(d, s) LOG_BUFFER_HEXDUMP(d, s, ESP_LOG_INFO)
 #define LOG_BUFFER_W(d, s) LOG_BUFFER_HEXDUMP(d, s, ESP_LOG_WARN)
 #define LOG_BUFFER_E(d, s) LOG_BUFFER_HEXDUMP(d, s, ESP_LOG_ERROR)
+
+#define STRINGIFY_LN_2(X) #X
+#define STRINGIFY_LN(X)   STRINGIFY_LN_2(X)
+#define STR_LN            STRINGIFY_LN(__LINE__)
+
+#define LOGLV(...) ESP_LOGV(TAG ":" STR_LN, ##__VA_ARGS__)
+#define LOGLD(...) ESP_LOGD(TAG ":" STR_LN, ##__VA_ARGS__)
+#define LOGLI(...) ESP_LOGI(TAG ":" STR_LN, ##__VA_ARGS__)
+#define LOGLW(...) ESP_LOGW(TAG ":" STR_LN, ##__VA_ARGS__)
+#define LOGLE(...) ESP_LOGE(TAG ":" STR_LN, ##__VA_ARGS__)
+
+#define LOG_BUFFER_HEXDUMP_L(d, s, l) \
+	ESP_LOG_BUFFER_HEXDUMP(TAG ":" STR_LN, d, s, l)
+
+#define LOG_BUFFER_LV(d, s) LOG_BUFFER_HEXDUMP_L(d, s, ESP_LOG_VERBOSE)
+#define LOG_BUFFER_LD(d, s) LOG_BUFFER_HEXDUMP_L(d, s, ESP_LOG_DEBUG)
+#define LOG_BUFFER_LI(d, s) LOG_BUFFER_HEXDUMP_L(d, s, ESP_LOG_INFO)
+#define LOG_BUFFER_LW(d, s) LOG_BUFFER_HEXDUMP_L(d, s, ESP_LOG_WARN)
+#define LOG_BUFFER_LE(d, s) LOG_BUFFER_HEXDUMP_L(d, s, ESP_LOG_ERROR)
 
 #define LOG_FUN(l, m) LOG##l("%s%s:%d", __func__, m, __LINE__)
 
@@ -71,18 +91,38 @@
 
 // #define printf(m, ...) LOGD(m, ##__VA_ARGS__)
 
-#define LOG_COND(l, c, t, f) \
-	if (c) {                 \
-		LOG##l(t);           \
-	} else {                 \
-		LOGE(f);             \
+#define LOG_COND(lt, lf, c, t, f) \
+	if (c) {                      \
+		LOG##lt(t);               \
+	} else {                      \
+		LOG#lf(f);                  \
 	}
 
-#define LOG_COND_V(c, t, f) LOG_COND(V, c, t, f)
-#define LOG_COND_D(c, t, f) LOG_COND(D, c, t, f)
-#define LOG_COND_I(c, t, f) LOG_COND(I, c, t, f)
-#define LOG_COND_W(c, t, f) LOG_COND(W, c, t, f)
-#define LOG_COND_E(c, t, f) LOG_COND(E, c, t, f)
+#define LOG_COND_VV(c, t, f) LOG_COND(V, V, c, t, f)
+#define LOG_COND_DV(c, t, f) LOG_COND(D, V, c, t, f)
+#define LOG_COND_IV(c, t, f) LOG_COND(I, V, c, t, f)
+#define LOG_COND_WV(c, t, f) LOG_COND(W, V, c, t, f)
+#define LOG_COND_EV(c, t, f) LOG_COND(E, V, c, t, f)
+#define LOG_COND_VD(c, t, f) LOG_COND(V, D, c, t, f)
+#define LOG_COND_DD(c, t, f) LOG_COND(D, D, c, t, f)
+#define LOG_COND_ID(c, t, f) LOG_COND(I, D, c, t, f)
+#define LOG_COND_WD(c, t, f) LOG_COND(W, D, c, t, f)
+#define LOG_COND_ED(c, t, f) LOG_COND(E, D, c, t, f)
+#define LOG_COND_VI(c, t, f) LOG_COND(V, I, c, t, f)
+#define LOG_COND_DI(c, t, f) LOG_COND(D, I, c, t, f)
+#define LOG_COND_II(c, t, f) LOG_COND(I, I, c, t, f)
+#define LOG_COND_WI(c, t, f) LOG_COND(W, I, c, t, f)
+#define LOG_COND_EI(c, t, f) LOG_COND(E, I, c, t, f)
+#define LOG_COND_VW(c, t, f) LOG_COND(V, W, c, t, f)
+#define LOG_COND_DW(c, t, f) LOG_COND(D, W, c, t, f)
+#define LOG_COND_IW(c, t, f) LOG_COND(I, W, c, t, f)
+#define LOG_COND_WW(c, t, f) LOG_COND(W, W, c, t, f)
+#define LOG_COND_EW(c, t, f) LOG_COND(E, W, c, t, f)
+#define LOG_COND_VE(c, t, f) LOG_COND(V, E, c, t, f)
+#define LOG_COND_DE(c, t, f) LOG_COND(D, E, c, t, f)
+#define LOG_COND_IE(c, t, f) LOG_COND(I, E, c, t, f)
+#define LOG_COND_WE(c, t, f) LOG_COND(W, E, c, t, f)
+#define LOG_COND_EE(c, t, f) LOG_COND(E, E, c, t, f)
 
 #define BIT_STR  "%d"
 #define BYTE_STR BIT_STR BIT_STR BIT_STR BIT_STR BIT_STR BIT_STR BIT_STR BIT_STR
