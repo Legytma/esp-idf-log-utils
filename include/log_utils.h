@@ -37,7 +37,7 @@
 #endif
 
 #define LOG_TAG(t) static const char* UNUSED(TAG) = t
-#define LOG_TAG_FILE() static const char* UNUSED(TAG) = __LINE__
+#define LOG_TAG_FILE() static const char* UNUSED(TAG) = __BASE_FILE__
 
 #define LOGV(...) ESP_LOGV(TAG, ##__VA_ARGS__)
 #define LOGD(...) ESP_LOGD(TAG, ##__VA_ARGS__)
